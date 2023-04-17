@@ -36,6 +36,8 @@ export class TabellaEmployeeComponent implements OnInit {
         this.pageNumber = ServerResponse.page.number;
         this.data = ServerResponse,
         this.dataSource.data = this.data._embedded.employees
+        if(this.data?._embedded.employees.length == 0)
+          this.previousPage();
       }
     )
   }
@@ -55,7 +57,7 @@ export class TabellaEmployeeComponent implements OnInit {
 
     for (const value of values) {
       if(!value){
-        alert("Inserire dei valori");
+        this.alert();
         return;
       }
     }
@@ -79,7 +81,7 @@ export class TabellaEmployeeComponent implements OnInit {
 
     for (const value of values) {
       if(!value){
-        alert("Inserire dei valori");
+        this.alert();
         return;
       }
     }
@@ -87,15 +89,18 @@ export class TabellaEmployeeComponent implements OnInit {
     this.restClient.postRow(URL, e).subscribe(
       () => {
         this.isNewFormHidden = true;
-        this.reload();
       }
     );
+  }
+
+  alert(){
+    alert("Inserire dei valori");
   }
 
   reload(){
     this.loadData(URL, this.pageNumber);
   }
-
+  
   startPage(){
     this.loadData(URL, 0);
   }
@@ -111,7 +116,4 @@ export class TabellaEmployeeComponent implements OnInit {
   endPage(){
     this.loadData(this.data!._links.last.href.toString());
   }
-
-
-
 }
